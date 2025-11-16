@@ -1,3 +1,7 @@
+# ENGG64 – Visão Computacional
+# Estudo Dirigido 2 - Histograma
+# Aluno: Ricardo Machado
+
 import cv2 as cv
 import seaborn as sns
 import matplotlib.pyplot as plt
