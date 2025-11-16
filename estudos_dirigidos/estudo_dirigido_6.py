@@ -1,3 +1,7 @@
+# ENGG64 – Visão Computacional
+# Estudo Dirigido 6 - Kernel
+# Aluno: Ricardo Machado
+
 import cv2 as cv
 import numpy as np
 
