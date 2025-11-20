@@ -53,7 +53,6 @@ def main():
     cv2.imshow('Canal b da Imagem Segmentada', b_channel)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
-    print(chromatic_img)
     histogram = cv2.calcHist([b_channel],[0],None,[256],[0,1])
     sns.lineplot(histogram)
     plt.title('Histograma do Canal b da Imagem Segmentada')
@@ -65,7 +64,9 @@ def main():
     threshold_value = 58/255
     # Aplicando o thresholding no canal b da imagem segmentada.
     ret,thresh1 = cv2.threshold(b_channel,threshold_value,1,cv2.THRESH_BINARY)
-    cv2.imshow('Imagem binária', thresh1)
+    # Invertendo a imagem binária para melhor visualização.
+    thresh1_not = cv2.bitwise_not(np.uint8(thresh1*255))
+    cv2.imshow('Imagem threshold', thresh1_not)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
     
@@ -100,6 +101,19 @@ def main():
 
     plt.tight_layout()
     plt.show()
-    #TODO: Determinar os centroides dos alvos amarelos no plano de cromaticidade.
+    # Determinar o centroide dos alvos na imagem binária para cada um dos blobs.
+    contours, hierarchy = cv2.findContours(thresh1_not,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+    for i, contour in enumerate(contours):
+        # Determinação dos centroides.
+        M = cv2.moments(contour)
+        if M['m00'] != 0:
+            cX = int(M['m10'] / M['m00'])
+            cY = int(M['m01'] / M['m00'])
+            cv2.circle(img, (cX, cY), 5, (255, 0, 0), -1)
+    # Mostrar imagem original com os centroides marcados.
+    cv2.imshow('Centroides dos Alvos', img)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+    
 if __name__ == "__main__":
     main()
